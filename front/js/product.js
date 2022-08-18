@@ -1,8 +1,8 @@
-// Récupération de l'id du produit dans l'api via l'url, avec location.href, on lui demande de regarder dans l'url du href pour trouver l'id voulue. 
+// On appelle notre fonction pour la récupération de l'id du produit ciblé.  
 
 getOneProduct()
 
-// Récupéreration de l'id du produit dans l'api
+// Récupération de l'id du produit dans l'api via l'url, avec location.href, on lui demande de regarder dans l'url du href pour trouver l'id voulue.
 // Avec Fetch on demande une réponse en .json en précisant l'id du produit désiré de manière dynamique. 
  function getOneProduct() { 
   const oneProductId = new URL(location.href).searchParams.get("id");
