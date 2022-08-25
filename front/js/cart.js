@@ -1,21 +1,22 @@
 // Ne pas faire de .reload()
 
-iniProducts();
+initProducts();
 
 let productsWithAllInfos = [];
 
-function iniProducts() {
-    let productsFormLS = getCart();
-    productsFormLS.forEach(productFromLS => {
+function initProducts() {
+    let productsFromLS = getCart();
+    productsFromLS.forEach(productFromLS => {
         fetch(`http://localhost:3000/api/products/${productFromLS.id}`)
             .then((res) => res.json())
             .then((productFromAPI) => {
                 let productWithAllInfos = {};
                 Object.assign(productWithAllInfos, productFromAPI)
-                productWithAllInfos.color = productFromLS.color;
-                delete productWithAllInfos.colors
+                productWithAllInfos.colors = productFromLS.color;
+                delete productWithAllInfos.colors;
                 productWithAllInfos.id = productWithAllInfos._id
                 delete productWithAllInfos._id;
+                productWithAllInfos.quantity = productFromLS.quantity;
                 productsWithAllInfos.push(productWithAllInfos)
                 console.log(productWithAllInfos)
                 displayProduct(productWithAllInfos);
@@ -77,8 +78,9 @@ function changeQuantity(product, newQuantity) {
 
 //calcul de quantité de produits dans le panier
 function getNumberProduct() {
+    let cart = getCart();
     let number = 0;
-    for (let product of productsWithAllInfos) {
+    for (let product of cart) {
         number += product.quantity;
     }
     return number;
@@ -113,6 +115,7 @@ article.appendChild(cartItemImg);
 cartItemImg.appendChild(img);
 
 // TODO: Autres elements
+
 }
 
 

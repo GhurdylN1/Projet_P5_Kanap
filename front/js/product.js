@@ -87,9 +87,6 @@ async function addToLocalStorage() {
   const quantityImput = document.querySelector("#quantity"); // on veut récuperer la quantité choisie
   const productItemData = { // on met les données du produit dans un array pour l'affichage dans le local storage
     id: product._id,
-    name: product.name,
-    price: product.price,
-    imageUrl: product.imageUrl,
     color: colorSelect.value,
     quantity : parseInt(quantityImput.value), // parseInt permet d'ajouter chaque nouvelle valeur, sinon la valeur se rajoute à la suite de la nouvelle (au lieu de (1+4 = 5) on aurait 1+4 => 14)
   };
