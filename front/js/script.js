@@ -37,8 +37,3 @@ function displayKanapProductList(products) {
         article.appendChild(p);
     }
 }
-
-
-
-
-
