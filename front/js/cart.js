@@ -59,6 +59,8 @@ function removeFromCart(product) {
     productsWithAllInfos = productsWithAllInfos.filter(p => p.id != product.id && p.color != product.color);
 }
 
+
+
 // fonction de modification de quantité prenant compte de sa couleur
 function changeQuantity(product, newQuantity) {
     let cart = getCart();
@@ -90,6 +92,7 @@ function getNumberProduct() {
 
 //calcul du prix total
 function getTotalPrice() {
+    let cart = getCart();
     let total = 0;
     for (let product of productsWithAllInfos) {
         total += product.quantity * product.price;
@@ -101,6 +104,7 @@ function getTotalPrice() {
 }
 
 function displayProduct(product) {
+    let cart = getCart();
     const cartItem = document.querySelector("#cart__items");
     // Création des differents élément html qu'on veut afficher dans le DOM dans une balise "article"
     const article = document.createElement("article");
@@ -173,7 +177,7 @@ function displayProduct(product) {
 
     getNumberProduct()
     getTotalPrice();
-
+    
 }
 
 
