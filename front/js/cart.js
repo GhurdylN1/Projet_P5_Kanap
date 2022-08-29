@@ -51,15 +51,14 @@ function addCart(product) {
     saveCart(cart);
 }
 
-// fonction de retrait d'un produit du panier prenant compte de sa quantité et de sa couleur
+// fonction de suppression d'un produit du panier prenant compte de sa quantité et de sa couleur
 function removeFromCart(product) {
     let cart = getCart();
     cart = cart.filter(p => p.id != product.id && p.color != product.color);
     saveCart(cart);
     productsWithAllInfos = productsWithAllInfos.filter(p => p.id != product.id && p.color != product.color);
+    
 }
-
-
 
 // fonction de modification de quantité prenant compte de sa couleur
 function changeQuantity(product, newQuantity) {
@@ -104,7 +103,6 @@ function getTotalPrice() {
 }
 
 function displayProduct(product) {
-    let cart = getCart();
     const cartItem = document.querySelector("#cart__items");
     // Création des differents élément html qu'on veut afficher dans le DOM dans une balise "article"
     const article = document.createElement("article");
@@ -175,9 +173,13 @@ function displayProduct(product) {
     cartItemContentSettings.appendChild(cartItemDelete);
     cartItemDelete.appendChild(pItemDelete);
 
-    getNumberProduct()
+    getNumberProduct();
     getTotalPrice();
-    
+
+    pItemDelete.addEventListener("click", function() {
+        removeFromCart(product);
+        window.location.href = "cart.html";
+    })
 }
 
 
