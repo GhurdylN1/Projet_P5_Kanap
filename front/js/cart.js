@@ -52,12 +52,35 @@ function addCart(product) {
 }
 
 // fonction de suppression d'un produit du panier prenant compte de sa quantité et de sa couleur
-function removeFromCart(product) {
-    let cart = getCart();
-    cart = cart.filter(p => p.id != product.id && p.color != product.color);
-    saveCart(cart);
-    productsWithAllInfos = productsWithAllInfos.filter(p => p.id != product.id && p.color != product.color);
-    
+//function removeFromCart(product) {
+//    let cart = getCart();
+//    cart = cart.filter(p => p.id != product.id && p.color != product.color);
+//    saveCart(cart);
+//    productsWithAllInfos = productsWithAllInfos.filter(p => p.id != product.id && p.color != product.color);    
+//}
+
+function removeFromCart() {
+    let pItemDelete = document.getElementsByClassName("deleteItem");
+    console.log(pItemDelete)
+    let products = getCart()
+
+    for (let i = 0 ; i < pItemDelete.length ; i++) {
+        pItemDelete[i].addEventListener("click", (e) => {
+            console.log(e)
+            let pItemDeleteProductId = products[i].id
+            let pItemDeleteProductColor = products[i].color
+            console.log(pItemDeleteProductId)
+            console.log(pItemDeleteProductColor)
+
+            products = products.filter((p) => p.id != pItemDeleteProductId || p.color != pItemDeleteProductColor);
+            console.log(products)
+
+            localStorage.setItem("cart", JSON.stringify(products));
+
+            window.location.href = "cart.html";
+
+        })
+    }
 }
 
 // fonction de modification de quantité prenant compte de sa couleur
@@ -173,13 +196,16 @@ function displayProduct(product) {
     cartItemContentSettings.appendChild(cartItemDelete);
     cartItemDelete.appendChild(pItemDelete);
 
+    
     getNumberProduct();
     getTotalPrice();
+    removeFromCart();
+    
 
-    pItemDelete.addEventListener("click", function() {
-        removeFromCart(product);
-        window.location.href = "cart.html";
-    })
+    //pItemDelete.addEventListener("click", function() {
+    //    removeFromCart(product);
+    //    window.location.href = "cart.html";
+    //})
 }
 
 
