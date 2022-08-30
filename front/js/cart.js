@@ -51,37 +51,38 @@ function addCart(product) {
     saveCart(cart);
 }
 
-// fonction de suppression d'un produit du panier prenant compte de sa quantité et de sa couleur (elle fonctionnait mais supprimait le produit sans prendre en compte la couleur)
-//function removeFromCart(product) {
-//    let cart = getCart();
-//    cart = cart.filter(p => p.id != product.id && p.color != product.color);
-//    saveCart(cart);
-//    productsWithAllInfos = productsWithAllInfos.filter(p => p.id != product.id && p.color != product.color);    
-//}
-
-function removeFromCart() {
-    let pItemDelete = document.getElementsByClassName("deleteItem");
-    console.log(pItemDelete)
-    let products = getCart()
-
-    for (let i = 0 ; i < pItemDelete.length ; i++) {
-        pItemDelete[i].addEventListener("click", (e) => {
-            console.log(e)
-            let pItemDeleteProductId = products[i].id
-            let pItemDeleteProductColor = products[i].color
-            console.log(pItemDeleteProductId)
-            console.log(pItemDeleteProductColor)
-
-            products = products.filter((p) => p.id != pItemDeleteProductId || p.color != pItemDeleteProductColor);
-            console.log(products)
-
-            localStorage.setItem("cart", JSON.stringify(products));
-
-            window.location.href = "cart.html";
-
-        })
-    }
+//fonction de suppression d'un produit du panier prenant compte de sa quantité et de sa couleur (elle fonctionnait mais supprime le produit avec le meme id sans prendre en compte la couleur)
+function removeFromCart(product) {
+   let cart = getCart();
+   cart = cart.filter((p) => p.id != product.id && p.color != product.color);
+   console.log(cart);
+   saveCart(cart);
+   productsWithAllInfos = productsWithAllInfos.filter((p) => p.id != product.id && p.color != product.color);    
 }
+
+// //function removeFromCart() {  // finalement ça marche pas non plus..... il cible au click un autre poduit que celui clické aléatoirement et le supprime.... 
+//     let pItemDelete = document.getElementsByClassName("deleteItem"); 
+//     console.log(pItemDelete)
+//     let products = getCart()
+
+//     for (let i = 0 ; i < pItemDelete.length ; i++) {
+//         pItemDelete[i].addEventListener("click", (e) => {
+//             console.log(e)
+//             let pItemDeleteProductId = products[i].id
+//             let pItemDeleteProductColor = products[i].color
+//             console.log(pItemDeleteProductId)
+//             console.log(pItemDeleteProductColor)
+
+//             products = products.filter((p) => p.id != pItemDeleteProductId || p.color != pItemDeleteProductColor);
+//             console.log(products)
+
+//             localStorage.setItem("cart", JSON.stringify(products));
+
+//             //window.location.href = "cart.html";
+
+//         })
+//     }
+// }
 
 // fonction de modification de quantité prenant compte de sa couleur
 function changeQuantity(product, newQuantity) {
@@ -131,7 +132,7 @@ function displayProduct(product) {
     const article = document.createElement("article");
     article.setAttribute("class", "cart__item");
     article.setAttribute("data-id", `${product.id}`);
-    article.setAttribute("data-color", `${product.color}`);
+    article.setAttribute("data-color", `${product.colors}`);
 
     cartItem.appendChild(article);
 
@@ -199,13 +200,12 @@ function displayProduct(product) {
     
     getNumberProduct();
     getTotalPrice();
-    removeFromCart();
-    
 
-    //pItemDelete.addEventListener("click", function() {  (comme écrit plus haut, elle fonctionnait mais ne prenait pas en compte la couleur du produit)
-    //    removeFromCart(product);
-    //    window.location.href = "cart.html";
-    //})
+    pItemDelete.addEventListener("click", function() {  // comme écrit plus haut, elle fonctionnait mais ne prenait pas en compte la couleur du produit et supprime tous les produits ayant la meme id
+        console.log(pItemDelete);
+        removeFromCart(product);
+        //window.location.href = "cart.html";
+    })
 }
 
 
