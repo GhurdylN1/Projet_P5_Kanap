@@ -51,7 +51,7 @@ function addCart(product) {
     saveCart(cart);
 }
 
-// fonction de suppression d'un produit du panier prenant compte de sa quantité et de sa couleur
+// fonction de suppression d'un produit du panier prenant compte de sa quantité et de sa couleur (elle fonctionnait mais supprimait le produit sans prendre en compte la couleur)
 //function removeFromCart(product) {
 //    let cart = getCart();
 //    cart = cart.filter(p => p.id != product.id && p.color != product.color);
@@ -202,7 +202,7 @@ function displayProduct(product) {
     removeFromCart();
     
 
-    //pItemDelete.addEventListener("click", function() {
+    //pItemDelete.addEventListener("click", function() {  (comme écrit plus haut, elle fonctionnait mais ne prenait pas en compte la couleur du produit)
     //    removeFromCart(product);
     //    window.location.href = "cart.html";
     //})
