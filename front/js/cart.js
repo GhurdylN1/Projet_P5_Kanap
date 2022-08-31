@@ -40,17 +40,17 @@ function getCart() {
 }
 
 // fonction d'ajout d'un produit au panier et gestion de la quantité et de la couleur
-function addCart(product) {
-    let cart = getCart();
-    let foundProduct = cart.find(p => p.id == product.id && p.color == product.color);
-    if (foundProduct != undefined) {
-        foundProduct.quantity++;
-    } else {
-        product.quantity = 1
-        cart.push(product);
-    }
-    saveCart(cart);
-}
+// function addCart(product) {
+//     let cart = getCart();
+//     let foundProduct = cart.find(p => p.id == product.id && p.color == product.color);
+//     if (foundProduct != undefined) {
+//         foundProduct.quantity++;
+//     } else {
+//         product.quantity = 1
+//         cart.push(product);
+//     }
+//     saveCart(cart);
+// }
 
 // //fonction de suppression d'un produit du panier prenant compte de sa quantité et de sa couleur
 function removeFromCart(product) {
@@ -203,7 +203,35 @@ function displayProduct(product) {
     })
 }
 
-// to do formulaire !
+
+// Formulaire
+
+//déclaration des variables/regex pour la conformité demandée 
+let regexFirstName = new RegExp("^([^0-9]*).{3}$"); // ici on veut une saisie ne comportant pas de chiffre et au moins 3 lettres min/maj acceptées
+let regexLastName = new RegExp("^([^0-9]*).{3}$");
+let regexCity = new RegExp("^([^0-9]*).{3}$");
+let regexAddress = new RegExp("[A-Za-z0-9 ]{6}$"); // pour l'adresse on accepte les chiffres et min/maj et on veut au moins 6 lettres
+// pour l'email on accepte min/maj en lettres, les chiffres, le ".", "-" et "_", un seul "@"" puis encore min/maj et chiffres et ".-_", puis un seul "." et uniquement les min pour le NDD de 2 à 10 caractères
+let regexEmail = new RegExp("^[a-zA-Z0-9._-]+@{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,10}$", "g");
+
+
+// verification des données rentrées par l'utilisateur, si elles sont conformes aux regex 
+function checkUserDataInput() {
+    const userFirstname = document.getElementById("firstName").value;
+    const userLastname = document.getElementById("lastName").value;
+    const userAddress = document.getElementById("address").value;
+    const userEmail = document.getElementById("email").value;
+    const userCity = document.getElementById("city").value;
+    if (
+        !(regexFirstName.test(userFirstname) && regexLastName.test(userLastname)  && regexAddress.test(userAddress) && regexCity.test(userCity) && regexEmail.test(userEmail))
+    ) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+
 
 
 
