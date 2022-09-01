@@ -223,7 +223,7 @@ function checkUserDataInput() {
     const userEmail = document.getElementById("email").value;
     const userCity = document.getElementById("city").value;
     if (
-        !(regexFirstName.test(userFirstname) && regexLastName.test(userLastname)  && regexAddress.test(userAddress) && regexCity.test(userCity) && regexEmail.test(userEmail))
+        !(regexFirstName.test(userFirstname) && regexLastName.test(userLastname) && regexAddress.test(userAddress) && regexCity.test(userCity) && regexEmail.test(userEmail))
     ) {
         return false;
     } else {
@@ -231,6 +231,40 @@ function checkUserDataInput() {
     }
 }
 
+// faire une fonction d'affichage des erreurs de saisies utilisateur
+
+// faire une fonction qui vérifie au click sur "commander!" toutes les infos saisies  grace a "checkUserDataInput" et si "true" appelle la fonction de confirmation du panier
+
+// confirmation du panier et validation puis redirection sur la page confirmation.html
+function userCartConfirm() {
+    const productsInLS = getCart();
+    // on veux ici uniquement les id des produits
+    const newProducts = productsInLS.map((item) => {
+      return item.id;
+    });
+    const userOrder = {
+        contact: {
+          firstName: document.getElementById("firstName").value,
+          lastName: document.getElementById("lastName").value,
+          address: document.getElementById("address").value,
+          email: document.getElementById("email").value,
+          city: document.getElementById("city").value,
+        },
+        products: newProducts,
+      };
+    
+      fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        body: JSON.stringify(userOrder),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          location.href = `confirmation.html?id=${data.orderId}`;
+        })
+    }
 
 
 
