@@ -1,4 +1,4 @@
-// Ne pas faire de .reload()
+// on lance la fonction qui va afficher notre panier
 
 initProducts();
 
@@ -7,6 +7,7 @@ let productsWithAllInfos = [];
 function initProducts() {
     const productsFromLS = getCart();
     console.log(productsFromLS.map (e => e.color));
+    checkCart();
     productsFromLS.forEach(productFromLS => {
         fetch(`http://localhost:3000/api/products/${productFromLS.id}`)
             .then((res) => res.json())
@@ -38,19 +39,6 @@ function getCart() {
         return JSON.parse(cart);
     }
 }
-
-// fonction d'ajout d'un produit au panier et gestion de la quantité et de la couleur
-// function addCart(product) {
-//     let cart = getCart();
-//     let foundProduct = cart.find(p => p.id == product.id && p.color == product.color);
-//     if (foundProduct != undefined) {
-//         foundProduct.quantity++;
-//     } else {
-//         product.quantity = 1
-//         cart.push(product);
-//     }
-//     saveCart(cart);
-// }
 
 // //fonction de suppression d'un produit du panier prenant compte de sa quantité et de sa couleur
 function removeFromCart(product) {
@@ -112,7 +100,6 @@ function displayProduct(product) {
     article.setAttribute("class", "cart__item");
     article.dataset.id = product.id;
     article.dataset.color = product.color;
-
     // article.setAttribute("data-id", `${product.id}`);
     // article.setAttribute("data-color", `${product.color}`);
 
@@ -207,12 +194,12 @@ function displayProduct(product) {
 // Formulaire
 
 //déclaration des variables/regex pour la conformité demandée 
-let regexFirstName = new RegExp("^([^0-9]*).{3}$"); // ici on veut une saisie ne comportant pas de chiffre et au moins 3 lettres min/maj acceptées
-let regexLastName = new RegExp("^([^0-9]*).{3}$");
-let regexCity = new RegExp("^([^0-9]*).{3}$");
+let regexFirstName = new RegExp("^([^0-9]*){3}$"); // ici on veut une saisie ne comportant pas de chiffre et au moins 3 lettres min/maj
+let regexLastName = new RegExp("^([^0-9]*){3}$");
+let regexCity = new RegExp("^([^0-9]*){3}$");
 let regexAddress = new RegExp("[A-Za-z0-9 ]{6}$"); // pour l'adresse on accepte les chiffres et min/maj et on veut au moins 6 lettres
 // pour l'email on accepte min/maj en lettres, les chiffres, le ".", "-" et "_", un seul "@"" puis encore min/maj et chiffres et ".-_", puis un seul "." et uniquement les min pour le NDD de 2 à 10 caractères
-let regexEmail = new RegExp("^[a-zA-Z0-9._-]+@{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,10}$", "g");
+let regexEmail = new RegExp("^[a-zA-Z0-9.-_]+@{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$", "g");
 
 
 // verification des données rentrées par l'utilisateur, si elles sont conformes aux regex 
@@ -232,10 +219,57 @@ function checkUserDataInput() {
 }
 
 // faire une fonction d'affichage des erreurs de saisies utilisateur
+function errorDisplay(input, ErrorMsg, regex, type, required) {
+ErrorMsg = document.querySelector(`#${ErrorMsg}`);
+// console.log(errorDisplay);
+    if (input == "") {
+        ErrorMsg.textContent = `Renseignez ${type}`;
+        ErrorMsg.style.display = "block";
+    } else if (!regex.test(input)) {
+        ErrorMsg.textContent = `Renseignez ${type} ${required}`;
+        ErrorMsg.style.display = "block";
+    } else if (regex.test(input)) {
+        ErrorMsg.textContent = "";
+        ErrorMsg.style.display = "none";
+    }
+}
 
 // faire une fonction qui vérifie au click sur "commander!" toutes les infos saisies  grace a "checkUserDataInput" et si "true" appelle la fonction de confirmation du panier
+const orderConfirmationButton = document.querySelector("#order");
+orderConfirmationButton.addEventListener("click", async (e) => {
+    const checkVerification = checkUserDataInput();
+    const checkCartValidation = await checkCart();
+    e.preventDefault();
+    if (checkVerification && !checkCartValidation) {
+        userCartConfirm();
+    } else if (checkCartValidation) {
+        alert("Votre panier est vide");
+    } else if (!checkVerification) {
+        let userFirstNameInput = document.getElementById("firstName");
+        errorDisplay(
+            userFirstNameInput.value, "firstNameErrorMsg", regexFirstName, "votre Prénom (sans chiffres)", "d'au moins 3 lettres"
+        );
+        let userLastNameInput = document.getElementById("lastName");
+        errorDisplay(
+            userLastNameInput.value, "lastNameErrorMsg", regexLastName, "votre Nom (sans chiffres)", "d'au moins 3 lettres"
+        );
+        let userCityInput = document.getElementById("city");
+        errorDisplay(
+            userCityInput.value, "cityErrorMsg", regexCity, "votre ville", "d'au moins 3 lettres"
+        );
+        let userAddressInput = document.getElementById("address");
+        errorDisplay(
+            userAddressInput.value, "addressErrorMsg", regexAddress, "votre adresse", "d'au moins 6 caractères"
+        );
+        let userEmailInput = document.getElementById("email");
+        errorDisplay(
+            userEmailInput.value, "emailErrorMsg", regexEmail, "une adresse mail valide", "exemple: test@test.com"
+        );
+   
+    }
+})
 
-// confirmation du panier et validation puis redirection sur la page confirmation.html
+// confirmation du panier et validation puis redirection sur la page confirmation.html !(a rajouter une verification de panier vide ou pas)!
 function userCartConfirm() {
     const productsInLS = getCart();
     // on veux ici uniquement les id des produits
@@ -265,8 +299,12 @@ function userCartConfirm() {
           location.href = `confirmation.html?id=${data.orderId}`;
         })
     }
-
-
-
-
-
+// fonction de vérification du panier si il est vide ou pas
+    async function checkCart() {
+        const productsInCart = await getCart();
+        const cartProducts = document.getElementById("cart__items");
+        if (productsInCart.length == 0) {
+          cartProducts.textContent = "Votre panier ne contient aucun article";
+          return true;
+        }
+      }

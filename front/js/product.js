@@ -77,7 +77,7 @@ async function getProductId() {
     const body = await response.json();
     return body;
   } catch (e) {
-    alert("Le serveur ne réponds pas, veuillez réessayer plus tard")
+    alert("Il semblerait que notre serveur fasse une sieste, merci de réessayer plus tard")
   }
 }
 
