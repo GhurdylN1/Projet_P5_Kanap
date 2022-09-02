@@ -1,6 +1,6 @@
 //--Récupération des produits via l'api 
 
-fetch("http://localhost:300/api/products") // Avec la commande "fetch" on va chercher la liste des produits via l'url de l'api.
+fetch("http://localhost:3000/api/products") // Avec la commande "fetch" on va chercher la liste des produits via l'url de l'api.
     .then((res) => res.json()) // on demande un résultat en .json.
     .then((productsItems) => { // le résultat sera appelé productsItems, qui corespond à l'ensemble des produits de l'api, les canapés. 
         console.table(productsItems); // on demande l'affichage sous forme de tableau dans la console de productsItems. 
