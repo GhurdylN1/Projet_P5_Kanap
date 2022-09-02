@@ -11,7 +11,7 @@ fetch("http://localhost:3000/api/products") // Avec la commande "fetch" on va ch
         errH1.textContent = "erreur 404";
         let errH2 = document.querySelector("h2");
         errH2.textContent = "Le serveur ne réponds pas, veuillez réessayer plus tard."
-        console.log("erreur 404, api introuvable :" + err);
+        console.log("Api introuvable, erreur 404 :" + err);
     });
 
 // On affiche les canapés sur la page index.html avec la fonction "kanapAll".

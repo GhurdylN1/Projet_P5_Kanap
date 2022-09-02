@@ -12,7 +12,13 @@ getOneProductId()
   .then((product) => {
     console.log(product)
     displayProduct(product);
-  }) 
+  })
+  .catch((err) => { // on affiche une erreur qui modifie la page produit si l'api ne réponds pas
+    let errItem = document.querySelector("article");
+    errItem.style.fontSize = "x-large";
+    errItem.textContent = "Le serveur ne réponds pas, veuillez réessayer plus tard.";
+    console.log("Api introuvable, erreur 404 :" + err);
+});
 }
 
 // Fonction d'affichage du produit et des ses caractéristiques, création de variables item**** corespondant aux differents attributs du produit (img, content,...)
@@ -95,7 +101,7 @@ async function addToLocalStorage() {
     return item.id == product._id && item.color == colorSelect.value;
   });
   if ((quantityImput.value < 1 || quantityImput.value > 100) && colorSelect.value == "") { // on veut afficher une fenetre d'alerte si la couleur et/ou la quantité n'est pas renseignée
-    alert ("Veuillez choisir une couleur et une quantité comprise entre 1 et 100");
+    alert ("Veuillez choisir une couleur puis une quantité comprise entre 1 et 100");
   } else if (quantityImput.value < 1 || quantityImput.value > 100) {
     alert ("Veuillez choisir une quantité comprise entre 1 et 100");
   } else if (colorSelect.value =="") {

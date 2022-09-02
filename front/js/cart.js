@@ -22,6 +22,15 @@ function initProducts() {
                 productsWithAllInfos.push(productWithAllInfos)
                 displayProduct(productWithAllInfos);
             })
+            .catch((err) => { // on affiche une erreur qui modifie la page panier si l'api ne réponds pas
+                let errH1 = document.querySelector("h1");
+                errH1.textContent = "erreur 404";
+                let errCart = document.querySelector("section");
+                errCart.style.textAlign = "center";
+                errCart.style.fontSize = "x-large";
+                errCart.textContent = "Le serveur ne réponds pas, veuillez réessayer plus tard.";
+                console.log("Api introuvable, erreur 404 :" + err);
+            });
     });
 }
 
@@ -46,6 +55,7 @@ function removeFromCart(product) {
     const before = cart.length;
     cart = cart.filter((p) => !(p.id === product.id && p.color === product.color));
     saveCart(cart);
+    checkCart(); // ici on rapelle la fonction de vérification du panier dans le cas ou le dernier produit du panier soit supprimé
     const after = cart.length;
     productsWithAllInfos = productsWithAllInfos.filter((p) => !(p.id === product.id && p.color === product.color));
     return before !== after
@@ -194,9 +204,9 @@ function displayProduct(product) {
 // Formulaire
 
 //déclaration des variables/regex pour la conformité demandée 
-let regexFirstName = new RegExp("^([^0-9]*){3}$"); // ici on veut une saisie ne comportant pas de chiffre et au moins 3 lettres min/maj
-let regexLastName = new RegExp("^([^0-9]*){3}$");
-let regexCity = new RegExp("^([^0-9]*){3}$");
+let regexFirstName = new RegExp("^([^0-9]*).{3}$"); // ici on veut une saisie ne comportant pas de chiffre et au moins 3 lettres min/maj
+let regexLastName = new RegExp("^([^0-9]*).{3}$");
+let regexCity = new RegExp("^([^0-9]*).{3}$");
 let regexAddress = new RegExp("[A-Za-z0-9 ]{6}$"); // pour l'adresse on accepte les chiffres et min/maj et on veut au moins 6 lettres
 // pour l'email on accepte min/maj en lettres, les chiffres, le ".", "-" et "_", un seul "@"" puis encore min/maj et chiffres et ".-_", puis un seul "." et uniquement les min pour le NDD de 2 à 10 caractères
 let regexEmail = new RegExp("^[a-zA-Z0-9.-_]+@{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$", "g");
@@ -243,7 +253,7 @@ orderConfirmationButton.addEventListener("click", async (e) => {
     if (checkVerification && !checkCartValidation) {
         userCartConfirm();
     } else if (checkCartValidation) {
-        alert("Votre panier est vide");
+         alert("Votre panier est vide");
     } else if (!checkVerification) {
         let userFirstNameInput = document.getElementById("firstName");
         errorDisplay(
@@ -299,12 +309,20 @@ function userCartConfirm() {
           location.href = `confirmation.html?id=${data.orderId}`;
         })
     }
-// fonction de vérification du panier si il est vide ou pas
+// fonction de vérification du panier si il est vide ou pas, et on désactive l'affichage du bouton de confirmation.
     async function checkCart() {
         const productsInCart = await getCart();
         const cartProducts = document.getElementById("cart__items");
         if (productsInCart.length == 0) {
+          cartProducts.style.textAlign = "center";
+          cartProducts.style.fontSize = "x-large";  
           cartProducts.textContent = "Votre panier ne contient aucun article";
+          let hideCartPrice = document.getElementsByClassName("cart__price")[0];
+          hideCartPrice.style.display = "none";
+          let hideCartForm = document.getElementsByClassName("cart__order")[0];
+          hideCartForm.style.display ="none";
+          let hideBtnConfirm = document.getElementById("order");
+          hideBtnConfirm.style.display = "none";
           return true;
         }
       }
