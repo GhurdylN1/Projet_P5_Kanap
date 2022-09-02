@@ -269,7 +269,7 @@ orderConfirmationButton.addEventListener("click", async (e) => {
     }
 })
 
-// confirmation du panier et validation puis redirection sur la page confirmation.html !(a rajouter une verification de panier vide ou pas)!
+// confirmation du panier et validation puis redirection sur la page confirmation.html
 function userCartConfirm() {
     const productsInLS = getCart();
     // on veux ici uniquement les id des produits
