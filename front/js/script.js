@@ -1,4 +1,4 @@
-//--Récupération des produits via l'api 
+// Récupération des produits via l'api 
 
 fetch("http://localhost:3000/api/products") // Avec la commande "fetch" on va chercher la liste des produits via l'url de l'api.
     .then((res) => res.json()) // on demande un résultat en .json.
