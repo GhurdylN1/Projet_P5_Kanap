@@ -223,12 +223,12 @@ function displayProduct(product) {
 // Formulaire
 
 //déclaration des variables/regex pour la conformité demandée
-let regexFirstName = new RegExp("^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{3,}$","i"); // ici on veut une saisie ne comportant pas de chiffre et au moins 3 lettres min/maj
-let regexLastName = new RegExp("^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{3,}$","i");
-let regexCity = new RegExp("^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{3,}$","i");
-let regexAddress = new RegExp("[A-Za-z0-9 ]{7}$"); // pour l'adresse on accepte les chiffres et min/maj et on veut au moins 7 lettres
-// pour l'email on accepte min/maj en lettres, les chiffres, le ".", "-" et "_", un seul "@"" puis encore min/maj et chiffres et ".-_", puis un seul "." et uniquement les min pour le NDD de 2 à 10 caractères
-let regexEmail = new RegExp("^[a-zA-Z0-9.-_]+@{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$", "g");
+let regexFirstName = new RegExp("^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ'\\s-]{3,}$","i"); // ici on veut une saisie ne comportant pas de chiffre et au moins 3 lettres min/maj
+let regexLastName = new RegExp("^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ'\\s-]{3,}$","i");
+let regexCity = new RegExp("^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ'\\s-]{3,}$","i");
+let regexAddress = new RegExp("[a-z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ'\\s-]{7,}$","i"); // pour l'adresse on accepte les chiffres et on veut au moins 7 lettres
+// pour l'email on accepte min/maj en lettres, les chiffres, le ".", "-" et "_", un seul "@"" puis encore min/maj et chiffres et ".-_", puis un seul "." et uniquement les min pour le NDD de 2 à 4 caractères
+let regexEmail = new RegExp("^[a-zA-Z0-9.-_]+@{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$","g");
 
 // verification des données rentrées par l'utilisateur, si elles sont conformes aux regex
 function checkUserDataInput() {
@@ -283,10 +283,10 @@ orderConfirmationButton.addEventListener("click", async (e) => {
     errorDisplay(userFirstNameInput.value, "firstNameErrorMsg", regexFirstName, "votre Prénom (sans chiffres)", "d'au moins 3 lettres");
     let userLastNameInput = document.getElementById("lastName");
     errorDisplay(userLastNameInput.value, "lastNameErrorMsg", regexLastName, "votre Nom (sans chiffres)", "d'au moins 3 lettres");
-    let userCityInput = document.getElementById("city");
-    errorDisplay(userCityInput.value, "cityErrorMsg", regexCity, "votre ville", "d'au moins 3 lettres");
     let userAddressInput = document.getElementById("address");
     errorDisplay(userAddressInput.value, "addressErrorMsg", regexAddress, "votre adresse", "d'au moins 7 caractères");
+    let userCityInput = document.getElementById("city");
+    errorDisplay(userCityInput.value, "cityErrorMsg", regexCity, "votre ville", "d'au moins 3 lettres");
     let userEmailInput = document.getElementById("email");
     errorDisplay(userEmailInput.value, "emailErrorMsg", regexEmail, "une adresse mail valide", "exemple: test@test.com");
   }
