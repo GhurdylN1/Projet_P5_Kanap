@@ -6,7 +6,6 @@ let productsWithAllInfos = [];
 
 function initProducts() {
   const productsFromLS = getCart();
-  // console.log(productsFromLS.map(e => e.color));
   checkCart();
   productsFromLS.forEach((productFromLS) => {
     fetch(`http://localhost:3000/api/products/${productFromLS.id}`)
@@ -200,10 +199,10 @@ function displayProduct(product) {
     const quantityValue = parseInt(inputItemQuantity.value);
     if (quantityValue === 0) {
       if (confirm("Cet article va être supprimé")) {
-        const article = inputItemQuantity.closest("article");
+        const article = inputItemQuantity.closest("article");// ici on selection l'element du DOM qu'on veut supprimer
         const success = removeFromCart(product);
         if (success === true) {
-          article.remove();
+          article.remove();// on retire du DOM l'element article du produit supprimé
         }
       } else {
         inputItemQuantity.value = inputItemQuantity.oldValue;
@@ -227,7 +226,8 @@ let regexFirstName = new RegExp("^[a-záàâäãåçéèêëíìîïñóòôöõ
 let regexLastName = new RegExp("^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ'\\s-]{3,}$","i");
 let regexCity = new RegExp("^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ'\\s-]{3,}$","i");
 let regexAddress = new RegExp("[a-z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ'\\s-]{7,}$","i"); // pour l'adresse on accepte les chiffres et on veut au moins 7 lettres
-// pour l'email on accepte min/maj en lettres, les chiffres, le ".", "-" et "_", un seul "@"" puis encore min/maj et chiffres et ".-_", puis un seul "." et uniquement les min pour le NDD de 2 à 4 caractères
+// pour l'email on accepte min/maj en lettres, les chiffres, le ".", "-" et "_", 
+// un seul "@"" puis encore min/maj et chiffres et ".-_", puis un seul "." et uniquement les min pour le NDD de 2 à 4 caractères
 let regexEmail = new RegExp("^[a-zA-Z0-9.-_]+@{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$","g");
 
 // verification des données rentrées par l'utilisateur, si elles sont conformes aux regex
@@ -276,8 +276,6 @@ orderConfirmationButton.addEventListener("click", async (e) => {
   e.preventDefault();
   if (checkVerification && !checkCartValidation) {
     userCartConfirm();
-  } else if (checkCartValidation) {
-    alert("Votre panier est vide");
   } else if (!checkVerification) {
     let userFirstNameInput = document.getElementById("firstName");
     errorDisplay(userFirstNameInput.value, "firstNameErrorMsg", regexFirstName, "votre Prénom (sans chiffres)", "d'au moins 3 lettres");
