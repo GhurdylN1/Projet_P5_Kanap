@@ -106,10 +106,8 @@ function displayProduct(product) {
   // Création des differents élément html qu'on veut afficher dans le DOM dans une balise "article"
   const article = document.createElement("article");
   article.setAttribute("class", "cart__item");
-  article.dataset.id = product.id;
-  article.dataset.color = product.color;
-  // article.setAttribute("data-id", `${product.id}`);
-  // article.setAttribute("data-color", `${product.color}`);
+  article.setAttribute("data-id", `${product.id}`);
+  article.setAttribute("data-color", `${product.color}`);
 
   cartItem.appendChild(article);
 
@@ -270,11 +268,10 @@ function errorDisplay(input, ErrorMsg, regex, type, required) {
 
 // faire une fonction qui vérifie au click sur "commander!" toutes les infos saisies  grace a "checkUserDataInput" et si "true" appelle la fonction de confirmation du panier
 const orderConfirmationButton = document.querySelector("#order");
-orderConfirmationButton.addEventListener("click", async (e) => {
+orderConfirmationButton.addEventListener("click", (e) => {
   const checkVerification = checkUserDataInput();
-  const checkCartValidation = await checkCart();
   e.preventDefault();
-  if (checkVerification && !checkCartValidation) {
+  if (checkVerification) {
     userCartConfirm();
   } else if (!checkVerification) {
     let userFirstNameInput = document.getElementById("firstName");
@@ -321,8 +318,8 @@ function userCartConfirm() {
     });
 }
 // fonction de vérification du panier si il est vide ou pas, et on désactive l'affichage du bouton de confirmation.
-async function checkCart() {
-  const productsInCart = await getCart();
+function checkCart() {
+  const productsInCart = getCart();
   const cartProducts = document.getElementById("cart__items");
   if (productsInCart.length == 0) {
     cartProducts.style.textAlign = "center";
