@@ -61,7 +61,7 @@ const buttonValidation = document.querySelector("#addToCart"); // on selection l
 buttonValidation.addEventListener("click", addToLocalStorage); // au click sur le bouton, on execute la fonction d'ajout au local storage
 
 function saveProductToLocalStorage(product) {
-  // on aura besoin d'une fonction de sauvegarde des choix en fin de fonction pour enregistrer le panier, ici "cart" en chaine de caractères.
+  // on aura besoin d'une fonction de sauvegarde des choix en fin de fonction pour enregistrer le panier, ici "cart".
   return localStorage.setItem("cart", JSON.stringify(product));
 }
 
@@ -83,7 +83,7 @@ async function getProductId() {
     const body = await response.json();
     return body;
   } catch (e) {
-    alert("Il semblerait que notre serveur fasse une sieste, merci de réessayer plus tard");
+    alert("Le serveur ne réponds pas, veuillez réessayer plus tard.");
   }
 }
 

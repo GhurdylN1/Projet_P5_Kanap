@@ -1,4 +1,4 @@
-// on lance la fonction qui va afficher notre panier
+// on lance la fonction qui va afficher notre panier et recuperer les infos manquantes dans l'api car nous avons stockés que 3 valeurs dans le local storage
 
 initProducts();
 
@@ -12,13 +12,13 @@ function initProducts() {
       .then((res) => res.json())
       .then((productFromAPI) => {
         const productWithAllInfos = {};
-        Object.assign(productWithAllInfos, productFromAPI);
+        Object.assign(productWithAllInfos, productFromAPI); 
         productWithAllInfos.color = productFromLS.color;
         productWithAllInfos.id = productWithAllInfos._id;
         delete productWithAllInfos._id;
         delete productWithAllInfos.colors;
         productWithAllInfos.quantity = productFromLS.quantity;
-        productsWithAllInfos.push(productWithAllInfos);
+        productsWithAllInfos.push(productWithAllInfos); 
         displayProduct(productWithAllInfos);
       })
       .catch((err) => {
@@ -220,13 +220,14 @@ function displayProduct(product) {
 // Formulaire
 
 //déclaration des variables/regex pour la conformité demandée
-let regexFirstName = new RegExp("^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ'\\s-]{3,}$","i"); // ici on veut une saisie ne comportant pas de chiffre et au moins 3 lettres min/maj
-let regexLastName = new RegExp("^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ'\\s-]{3,}$","i");
-let regexCity = new RegExp("^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ'\\s-]{3,}$","i");
-let regexAddress = new RegExp("[a-z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ'\\s-]{7,}$","i"); // pour l'adresse on accepte les chiffres et on veut au moins 7 lettres
+const ALL_NUMERIC = /[0-9]/g //on va empecher la saisie de chiffres
+  ,ALL_DOUBLE_NOT_ALPHABETIC = /([^a-z])(?=\1)/gi // on va empecher la saisie de tout caractères non alphabétiques à la suite
+  ,EMPTY = '' // on va empecher la saisie d'espaces à la suite
+  ,regexFirstName = regexLastName = regexCity = new RegExp("^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ'\\s-]{3,}$","i")
+  ,regexAddress = new RegExp("[a-z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ'\\s-]{7,}$","i") // pour l'adresse on accepte les chiffres et on veut au moins 7 lettres
 // pour l'email on accepte min/maj en lettres, les chiffres, le ".", "-" et "_", 
 // un seul "@"" puis encore min/maj et chiffres et ".-_", puis un seul "." et uniquement les min pour le NDD de 2 à 4 caractères
-let regexEmail = new RegExp("^[a-zA-Z0-9.-_]+@{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$","g");
+  ,regexEmail = new RegExp("^[a-zA-Z0-9.-_]+@{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$");
 
 // verification des données rentrées par l'utilisateur, si elles sont conformes aux regex
 function checkUserDataInput() {
@@ -253,24 +254,25 @@ function checkUserDataInput() {
 // faire une fonction d'affichage des erreurs de saisies utilisateur
 function errorDisplay(input, ErrorMsg, regex, type, required) {
   ErrorMsg = document.querySelector(`#${ErrorMsg}`);
-  // console.log(errorDisplay);
-  if (input == "") {
+  if (input === "") {
     ErrorMsg.textContent = `Renseignez ${type}`;
     ErrorMsg.style.display = "block";
-  } else if (!regex.test(input)) {
+  } else if (!(regex.test(input))) {
     ErrorMsg.textContent = `Renseignez ${type} ${required}`;
     ErrorMsg.style.display = "block";
-  } else if (regex.test(input)) {
+  } else {
     ErrorMsg.textContent = "";
     ErrorMsg.style.display = "none";
   }
+ 
 }
 
 // faire une fonction qui vérifie au click sur "commander!" toutes les infos saisies  grace a "checkUserDataInput" et si "true" appelle la fonction de confirmation du panier
-const orderConfirmationButton = document.querySelector("#order");
-orderConfirmationButton.addEventListener("click", (e) => {
-  const checkVerification = checkUserDataInput();
+// const orderConfirmationButton = document.querySelector("#order");
+const orderValidForm  =document.getElementsByClassName("cart__order__form")[0];
+orderValidForm.addEventListener('submit',(e)=>{
   e.preventDefault();
+  const checkVerification = checkUserDataInput();
   if (checkVerification) {
     userCartConfirm();
   } else if (!checkVerification) {
@@ -286,6 +288,63 @@ orderConfirmationButton.addEventListener("click", (e) => {
     errorDisplay(userEmailInput.value, "emailErrorMsg", regexEmail, "une adresse mail valide", "exemple: test@test.com");
   }
 });
+
+// On va aussi verifier lors de la saisie de l'utilisateur s'il n'essaye pas de saisir des caractères que l'on ne veut pas
+// firstName
+const inputFirstName = document.getElementById("firstName");
+inputFirstName.addEventListener("input", () => {
+  const value = inputFirstName.value
+    .replace(ALL_NUMERIC, EMPTY)
+    .replace(ALL_DOUBLE_NOT_ALPHABETIC, EMPTY);
+  inputFirstName.value = value;
+
+  const ErrorMsg = "firstNameErrorMsg",
+    type = "votre Prénom (sans chiffres)",
+    required = "d'au moins 3 lettres";
+  errorDisplay(value, ErrorMsg, regexFirstName, type, required);
+});
+
+// lastname
+const inputLastName = document.getElementById("lastName");
+inputLastName.addEventListener("input", () => {
+  const value = inputLastName.value
+    .replace(ALL_NUMERIC, EMPTY)
+    .replace(ALL_DOUBLE_NOT_ALPHABETIC, EMPTY);
+  inputLastName.value = value;
+
+  const ErrorMsg = "lastNameErrorMsg",
+    type = "votre Nom (sans chiffres)",
+    required = "d'au moins 3 lettres";
+  errorDisplay(value, ErrorMsg, regexLastName, type, required);
+});
+
+// address
+const inputAddress = document.getElementById("address");
+inputAddress.addEventListener("input", () => {
+  const value = inputAddress.value.replace(ALL_DOUBLE_NOT_ALPHABETIC, EMPTY);
+  inputAddress.value = value;
+  
+  errorDisplay(value, "addressErrorMsg", regexAddress, "votre adresse", "d'au moins 7 caractères");
+});
+
+// city
+const inputCity = document.getElementById('city')
+inputCity.addEventListener('input', () => {
+  const value= inputCity.value
+    .replace(ALL_NUMERIC, EMPTY)
+    .replace(ALL_DOUBLE_NOT_ALPHABETIC, EMPTY);
+  inputCity.value= value
+
+  errorDisplay(value, "cityErrorMsg", regexCity, "votre ville", "d'au moins 3 lettres");
+})
+
+// email
+const inputEmail = document.getElementById('email')
+inputEmail.addEventListener('input', () => {
+  const value= inputEmail.value
+
+  errorDisplay(value, "emailErrorMsg", regexEmail, "une adresse mail valide", "exemple: test@test.com");
+})
 
 // confirmation du panier et validation puis redirection sur la page confirmation.html
 function userCartConfirm() {
